@@ -28,6 +28,14 @@ Or, you can install the latest development version from `GitHub <https://github.
 
     $ pip install git+git://github.com/AndrewWalker/pydubins.git
 
+Build
+=====
+
+.. code-block:: console
+
+	$ python3 setup.py install --user
+
+
 Example
 =======
 
