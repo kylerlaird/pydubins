@@ -7,4 +7,4 @@ turning_radius = 1.0
 step_size = 0.5
 
 qs, _ = dubins.path_sample(q0, q1, turning_radius, step_size)
-print qs
+print(qs)
