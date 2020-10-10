@@ -60,24 +60,22 @@ def curvature(A, B, C):
 
 	return(1 / ((cx - A[0])**2 + (cy - A[1])**2)**.5)
 
-def plot_dubins_path_and (q0, q1, r=1.0, step_size=0.5):
-	qs, _ = dubins.path_sample(q0, q1, r, step_size)
-	qs = numpy.array(qs)
-	xs = qs[:, 0]
-	ys = qs[:, 1]
-	us = xs + numpy.cos(qs[:, 2])
-	vs = ys + numpy.sin(qs[:, 2])
+def plot_path_and_curvature(path, row):
+	path = numpy.array(path)
+	xs = path[:, 0]
+	ys = path[:, 1]
+	us = xs + numpy.cos(path[:, 2])
+	vs = ys + numpy.sin(path[:, 2])
 
 	curvature_points = []
 
-	plt.subplot(1, 2, 1)
+	plt.subplot(2, 2, row * 2 + 1)
 	plt.plot(xs, ys, 'b-')
 	plt.plot(xs, ys, 'r.')
 
 
-	for i in range(qs.shape[0]):
-		# displacement along the path
-		s = i * step_size
+	s = 0
+	for i in range(path.shape[0]):
 
 		plt.plot(
 			[xs[i], us[i]], 
@@ -91,7 +89,12 @@ def plot_dubins_path_and (q0, q1, r=1.0, step_size=0.5):
 			xytext=(0,10),
 			ha='center',
 		)
-		if (0 < i < qs.shape[0] - 1):
+
+		if (0 < i < path.shape[0] - 1):
+			# displacement along the path
+			#s = i * step_size
+			s += ((xs[i] - xs[i-1])**2 + (ys[i] - ys[i-1])**2) ** 0.5
+
 			k = curvature(
 				(xs[i-1], ys[i-1]),
 				(xs[i], ys[i]),
@@ -104,24 +107,17 @@ def plot_dubins_path_and (q0, q1, r=1.0, step_size=0.5):
 	expand_plot(ax)
 	ax.set_aspect('equal')
 
-	plt.subplot(1, 2, 2)
+	plt.subplot(2, 2, row*2 + 2)
 	plt.plot(*zip(*curvature_points))
 	ax = plt.gca()
 	expand_plot(ax)
 	#ax.set_aspect('equal')
 		
-def plot_dubins_table(cols, rho=1.0):
-	rows = ((len(items)) / cols)+1
-	for i, (a, b) in enumerate(items):
-		plt.subplot(rows, cols, i+1)
-		plot_dubins_path(qs[a], qs[b], r = rho)
-
-	plt.savefig('samples.png')
-	plt.show()
 
 if __name__ == "__main__":
-	#plot_dubins_table(3, 1.0)
-	plot_dubins_path(qs[0], qs[8], 3.5, 1.0)
+	path, _ = dubins.path_sample(qs[0], qs[8], 3.5, 1.0)
+	plot_path_and_curvature(path, 0)
+	plot_path_and_curvature(path, 1)
 	plt.show()
 
 
